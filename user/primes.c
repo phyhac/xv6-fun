@@ -13,7 +13,7 @@ int main() {
     int has_son = 0;
 
     has_son = fork();
-    if (!has_son) {4
+    if (!has_son) {
         // using dup(), don't 'pin = p[0]' !
         pin = dup(p[0]);
         close(p[0]);

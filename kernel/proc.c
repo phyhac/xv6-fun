@@ -307,6 +307,7 @@ fork(void)
     if(p->ofile[i])
       np->ofile[i] = filedup(p->ofile[i]);
   np->cwd = idup(p->cwd);
+  np->syscall_mask = p->syscall_mask;
 
   safestrcpy(np->name, p->name, sizeof(p->name));
 

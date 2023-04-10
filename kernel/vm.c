@@ -437,3 +437,25 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
     return -1;
   }
 }
+
+static void travel_pgtbl(pagetable_t pgtbl, int level) {
+  char prefix[] = " ..";
+  int prefix_cnt = 3 - level;
+
+  for (int idx = 0; idx < 256; idx++) {
+    pte_t *pte = &pgtbl[idx];
+    if (*pte & PTE_V) {
+      for (int i = 0; i < prefix_cnt; i++)
+        printf("%s", prefix);
+      printf("%d: pte %p pa %p\n", idx, *pte, PTE2PA(*pte));
+
+      if (level > 0)
+        travel_pgtbl((pagetable_t)PTE2PA(*pte), level - 1);
+    }
+  }
+}
+
+void vmprint(pagetable_t pgtbl) {
+  printf("page table %p\n", pgtbl);
+  travel_pgtbl(pgtbl, 2);
+}
